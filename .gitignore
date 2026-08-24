@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+infra/secrets/*.txt
+infra/backup/*.sql
+infra/backup/*.gz
+node_modules/
+dist/
+build/
+target/
+*.log
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

@@ -1,0 +1,49 @@
+{
+  "folders": [
+    { "name": "root",     "path": "." },
+    { "name": "infra",    "path": "infra" },
+    { "name": "services", "path": "services" },
+    { "name": "docs",     "path": "docs" }
+  ],
+  "settings": {
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "infra/secrets/*.txt": true
+    },
+    "docker.composeFile": "docker-compose.yml",
+    "sqltools.connections": [
+      {
+        "name": "hbs-local",
+        "driver": "MySQL",
+        "server": "127.0.0.1",
+        "port": 3306,
+        "database": "hotel_booking",
+        "username": "hbs_app"
+      }
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-azuretools.vscode-docker",
+      "mtxr.sqltools",
+      "mtxr.sqltools-driver-mysql",
+      "cweijan.vscode-redis-client",
+      "redhat.vscode-yaml",
+      "editorconfig.editorconfig"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      { "label": "infra: up",     "type": "shell", "command": "make up",       "problemMatcher": [] },
+      { "label": "infra: down",   "type": "shell", "command": "make down",     "problemMatcher": [] },
+      { "label": "infra: logs",   "type": "shell", "command": "make logs",     "problemMatcher": [] },
+      { "label": "infra: tools",  "type": "shell", "command": "make up-tools", "problemMatcher": [] },
+      { "label": "infra: backup", "type": "shell", "command": "make backup",   "problemMatcher": [] }
+    ]
+  }
+}

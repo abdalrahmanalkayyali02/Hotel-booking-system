@@ -1,0 +1,145 @@
+# Hotel Booking System - core infrastructure
+name: hotel-booking-system
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-common: &common
+  restart: unless-stopped
+  logging: *default-logging
+  networks: [hotel-booking-net]
+
+services:
+  mysql:
+    <<: *common
+    build:
+      context: ./infra/mysql
+      dockerfile: Dockerfile
+    image: hbs/mysql:8.4.6
+    container_name: hbs-mysql
+    command:
+      - --authentication-policy=caching_sha2_password
+      - --skip-name-resolve
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-hotel_booking}
+      APP_DB_USER: ${APP_DB_USER:-hbs_app}
+      TZ: ${TZ:-UTC}
+    secrets:
+      - mysql_root_password
+      - mysql_app_password
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./infra/mysql/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$(cat /run/secrets/mysql_root_password)\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1600M
+
+  redis:
+    <<: *common
+    image: redis:7.4.6-alpine
+    container_name: hbs-redis
+    user: "999:1000"
+    command:
+      - /bin/sh
+      - -c
+      - 'exec redis-server /usr/local/etc/redis/redis.conf --requirepass "$$(cat /run/secrets/redis_password)"'
+    environment:
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+    secrets:
+      - redis_password
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+      - ./infra/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$(cat /run/secrets/redis_password)\" --no-auth-warning PING | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  # dev-only tooling. `docker compose --profile tools up -d`
+  # CloudBeaver = DBeaver as a web app. Ports bound to 127.0.0.1 - never expose a DB UI on 0.0.0.0.
+  cloudbeaver:
+    <<: *common
+    image: dbeaver/cloudbeaver:25.2.3
+    container_name: hbs-cloudbeaver
+    profiles: [tools]
+    environment:
+      CLOUDBEAVER_APP_ANONYMOUS_ACCESS_ENABLED: "false"
+      CLOUDBEAVER_APP_SUPPORTS_CUSTOM_CONNECTIONS: "true"
+      CLOUDBEAVER_CORE_THEMING_THEME: dark
+      CLOUDBEAVER_BRUTE_FORCE_PROTECTION_ENABLED: "true"
+    ports:
+      - "127.0.0.1:${CLOUDBEAVER_PORT:-8979}:8978"
+    volumes:
+      - cloudbeaver-workspace:/opt/cloudbeaver/workspace
+      - ./infra/cloudbeaver/initial-data-sources.conf:/opt/cloudbeaver/conf/initial-data-sources.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8978/status || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  redisinsight:
+    <<: *common
+    image: redis/redisinsight:2.70
+    container_name: hbs-redisinsight
+    profiles: [tools]
+    ports:
+      - "127.0.0.1:${REDISINSIGHT_PORT:-5541}:5540"
+    volumes:
+      - redisinsight-data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+
+networks:
+  hotel-booking-net:
+    name: hotel-booking-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16
+
+volumes:
+  mysql-data:
+    name: hbs-mysql-data
+  redis-data:
+    name: hbs-redis-data
+  redisinsight-data:
+    name: hbs-redisinsight-data
+  cloudbeaver-workspace:
+    name: hbs-cloudbeaver-workspace
+
+secrets:
+  mysql_root_password:
+    file: ./infra/secrets/mysql_root_password.txt
+  mysql_app_password:
+    file: ./infra/secrets/mysql_app_password.txt
+  redis_password:
+    file: ./infra/secrets/redis_password.txt

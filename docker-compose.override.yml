@@ -1,0 +1,14 @@
+# Local dev overrides. Auto-loaded by `docker compose up`. Do not use in prod.
+services:
+  mysql:
+    command:
+      - --authentication-policy=caching_sha2_password
+      - --skip-name-resolve
+      - --general-log=1
+      - --general-log-file=/var/lib/mysql/general.log
+
+  redis:
+    command:
+      - /bin/sh
+      - -c
+      - 'exec redis-server /usr/local/etc/redis/redis.conf --requirepass "$$(cat /run/secrets/redis_password)" --loglevel debug'

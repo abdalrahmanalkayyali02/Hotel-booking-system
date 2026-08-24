@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "ms-azuretools.vscode-docker",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mysql",
+    "cweijan.vscode-redis-client",
+    "redhat.vscode-yaml",
+    "editorconfig.editorconfig"
+  ]
+}

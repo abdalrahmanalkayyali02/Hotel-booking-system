@@ -42,7 +42,8 @@
       { "label": "infra: up",     "type": "shell", "command": "make up",       "problemMatcher": [] },
       { "label": "infra: down",   "type": "shell", "command": "make down",     "problemMatcher": [] },
       { "label": "infra: logs",   "type": "shell", "command": "make logs",     "problemMatcher": [] },
-      { "label": "infra: tools",  "type": "shell", "command": "make up-tools", "problemMatcher": [] },
+      { "label": "infra: tools",  "type": "shell", "command": "docker compose --profile tools up -d", "problemMatcher": [] },
+      { "label": "infra: dbui",   "type": "shell", "command": "docker compose --profile tools up -d cloudbeaver", "problemMatcher": [] },
       { "label": "infra: backup", "type": "shell", "command": "make backup",   "problemMatcher": [] }
     ]
   }

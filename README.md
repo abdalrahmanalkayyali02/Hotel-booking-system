@@ -37,6 +37,7 @@ infra/mysql/initdb/01-schema.sql
 infra/mysql/initdb/02-seed-dev.sql
 infra/mysql/initdb/03-app-user.sh
 infra/redis/redis.conf          # AOF, allkeys-lru, destructive cmds disabled
+infra/cloudbeaver/initial-data-sources.conf   # pre-seeded DBeaver connections (no passwords)
 infra/secrets/*.txt             # docker secrets (gitignored)
 infra/backup/                   # mysqldump output (gitignored)
 services/                       # app services go here

@@ -6,7 +6,7 @@
 | ------------- | ---------------------- | ------------------------------------------ |
 | mysql         | mysql:8.4.6            | source of truth: hotels, rooms, bookings   |
 | redis         | redis:7.4.6-alpine     | cache, booking locks, sessions, rate limit |
-| adminer       | adminer:5.4.0          | dev DB UI (profile `tools`)                |
+| cloudbeaver   | dbeaver/cloudbeaver:25.2.3 | dev DB UI — DBeaver web (profile `tools`), 127.0.0.1:8979 |
 | redisinsight  | redis/redisinsight:2.70| dev Redis UI (profile `tools`)             |
 
 All on bridge network `hotel-booking-net`.

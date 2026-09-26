@@ -1,0 +1,208 @@
+{
+  "Purpose": "Local Arabic completion; no database operations. Normal generation uses checked-in corrections offline.",
+  "Coverage": {
+    "Countries": {
+      "Entities": 250,
+      "English": 250,
+      "Arabic": 250,
+      "AddedArabic": 0,
+      "MissingArabic": 0
+    },
+    "States": {
+      "Entities": 5308,
+      "English": 5308,
+      "Arabic": 5308,
+      "AddedArabic": 90,
+      "MissingArabic": 0
+    },
+    "Cities": {
+      "Entities": 152970,
+      "English": 152970,
+      "Arabic": 152970,
+      "AddedArabic": 7302,
+      "MissingArabic": 0
+    },
+    "Regions": {
+      "Entities": 6,
+      "English": 6,
+      "Arabic": 6,
+      "AddedArabic": 6,
+      "MissingArabic": 0
+    },
+    "SubRegions": {
+      "Entities": 22,
+      "English": 22,
+      "Arabic": 22,
+      "AddedArabic": 22,
+      "MissingArabic": 0
+    }
+  },
+  "AddedTranslations": 7420,
+  "SourceMethods": {
+    "country": {},
+    "state": {
+      "wikidata": 51,
+      "generated": 39
+    },
+    "city": {
+      "wikidata": 391,
+      "generated": 6911
+    },
+    "region": {
+      "wikidata": 5,
+      "generated": 1
+    },
+    "subregion": {
+      "wikidata": 20,
+      "generated": 2
+    }
+  },
+  "SourceNotes": [
+    "Pinned raw cities matched by source numeric ID, exact English name, country ID and state ID; compressed input SHA256 311575e7b90512b15cc1ba6c9e897b3e8f3905a9c6e09db344a7dc1cac1ba2f5.",
+    "Wikidata labels accepted only after English label/alias or ISO identity, geographic type, country P17 and (cities) source-state P131 ancestry checks. Each correction contains a revision URL and check evidence.",
+    "A resolving Wikidata ID alone is insufficient. Unconfirmed/rejected labels use generated renderings. HTTP 429 retrieval failures were retried sequentially with bounded retries.",
+    "Generated renderings use conventional Arabic geographic names, country-aware phonetic rules, explicit renderings for difficult records, and translation of administrative descriptors. They are not attributed to Wikidata or upstream Arabic fields.",
+    "Generated SourceUrl identifies the pinned English input. GenerationMethod and ReviewedBy disclose generation. Samples and identified scope ambiguities were checked by Codex; no claim of exhaustive independent linguistic review.",
+    "No native Arabic-script Persian/Urdu values were silently treated as Arabic labels.",
+    "Region/subregion label scope was compared explicitly against each CSV English name and parent region; 25 suitable labels retained, three CSV-scope renderings generated."
+  ],
+  "WikidataResults": {
+    "wikidata": 467,
+    "geography-type-unconfirmed": 75,
+    "no-arabic-label": 3905,
+    "scope-mismatch": 7,
+    "identity-mismatch": 299,
+    "no-wikidata-id": 2526,
+    "country-unconfirmed": 24,
+    "state-unconfirmed": 77,
+    "label-disambiguation": 40
+  },
+  "ScopeDecisions": [
+    {
+      "Key": "state/3798",
+      "EnglishName": "Thừa Thiên-Huế",
+      "ArabicName": "ثوا ثيين هوي",
+      "SourceType": "generated",
+      "WikidataId": "Q36399",
+      "WikidataResult": "scope-mismatch"
+    },
+    {
+      "Key": "state/4255",
+      "EnglishName": "Sveti Jurij ob Ščavnici",
+      "ArabicName": "سفيتي يوري أوب شتشافنيتسي",
+      "SourceType": "generated",
+      "WikidataId": "Q920353",
+      "WikidataResult": "scope-mismatch"
+    },
+    {
+      "Key": "city/15459",
+      "EnglishName": "União da Vitória",
+      "ArabicName": "أونياو دا فيتوريا",
+      "SourceType": "generated",
+      "WikidataId": "Q988869",
+      "WikidataResult": "scope-mismatch"
+    },
+    {
+      "Key": "city/109218",
+      "EnglishName": "Mto wa Mbu",
+      "ArabicName": "متو وا مبو",
+      "SourceType": "generated",
+      "WikidataId": "Q995238",
+      "WikidataResult": "scope-mismatch"
+    },
+    {
+      "Key": "region/6",
+      "EnglishName": "Polar",
+      "ArabicName": "المناطق القطبية",
+      "SourceType": "generated",
+      "WikidataId": "Q51",
+      "WikidataResult": "scope-mismatch"
+    },
+    {
+      "Key": "subregion/2",
+      "EnglishName": "Middle Africa",
+      "ArabicName": "وسط إفريقيا",
+      "SourceType": "generated",
+      "WikidataId": "Q27433",
+      "WikidataResult": "scope-mismatch"
+    },
+    {
+      "Key": "subregion/19",
+      "EnglishName": "Australia and New Zealand",
+      "ArabicName": "أستراليا ونيوزيلندا",
+      "SourceType": "generated",
+      "WikidataId": "Q45256",
+      "WikidataResult": "scope-mismatch"
+    }
+  ],
+  "Preservation": {
+    "PreexistingRowsCompared": 468265,
+    "PreexistingRowsChangedOrDeleted": 0,
+    "ExistingEnglishNamesChanged": 0,
+    "ExistingArabicNamesChanged": 0,
+    "ExistingEntityIdsChanged": 0,
+    "ExistingTranslationIdsChanged": 0,
+    "ExistingMappingsChanged": 0,
+    "ExistingMappingsDeleted": 0,
+    "ReservedStateCityArabicIdsReused": 7392,
+    "NewMappings": 28,
+    "InitialMapCount": 475657,
+    "FinalMapCount": 475685,
+    "OriginalCorrectionEntriesChanged": 0,
+    "UnchangedSourceSha256": {
+      "countries.csv": "20e8e03a30167325db001fcce8b9ca8b80f4862df0ef83a86b37b304e3177e3e",
+      "states.csv": "367fa287e25497a1089fc69a5d73541bf986d7e474d4da1666f43c49d91c7dc2",
+      "regions.csv": "847a67babb9feb4fe9efe2441b2d5ee804c27cc0cca82b3cfb8095392ed51c2a",
+      "subregions.csv": "a19d35af3aee65511b2ffae2312117c2f9f92488adb0bf298179c7070de9f228",
+      "Sources/geography.json.gz": "2d543368da45e4016d2e6aeb9f8366a6fb86b164204ac570984c28ccd44700cd",
+      "Sources/manifest.json": "c15c4e19648f760ad776b423f4f1157cc9d03e30b6d7bc2f6f3c630caad484d5"
+    }
+  },
+  "Validation": {
+    "MissingArabic": 0,
+    "ForeignKeyIssues": 0,
+    "OrphanedTranslations": 0,
+    "DuplicateParentLanguagePairs": 0,
+    "DuplicateIds": 0,
+    "BlankArabicNames": 0,
+    "LatinOnlyArabicNames": 0,
+    "CyrillicOnlyArabicNames": 0,
+    "MaxLengthViolations": 0,
+    "UnexpectedTranslations": 0,
+    "NamesTruncated": 0,
+    "MaximumObservedNameLengths": {
+      "Countries": 38,
+      "States": 50,
+      "Cities": 59,
+      "Regions": 15,
+      "SubRegions": 25
+    },
+    "StrictSeedValidatorIssues": 0
+  },
+  "BaselineArtifactsSha256": {
+    "id-map.json.gz": "041ec4bfca9abdacc0848396242928859c96ad6844ac5d64c0768b88f6baf9bc",
+    "Staging/seed-data.json.gz": "5f6bcda43adfa40b34cbabed42211d646701842dede3ae13538d2d1f261545d7",
+    "Sources/arabic-corrections.json": "98048b8ded0e0d11e9d2f03e1bbd8a9e09d84b808a9a3d4f6b0e6ca904afac72"
+  },
+  "ResultArtifactsSha256": {
+    "id-map.json.gz": "5560bd389d48cadae1a875dc0c5e3058665f53347a7f36ada1acdc0a06edcbd9",
+    "Staging/seed-data.json.gz": "0bc9398321984ae5b3a312785a6cea80fe86242ba60f6aac0ab9935ba38028d2",
+    "Sources/arabic-corrections.json": "c996497972d7cd8ea56dcef6c981138cb71a2a11fbb45e5fa269f378d98f3a8e"
+  },
+  "ChangedExistingFiles": [
+    "HBS.API/Db/Seeds/coverage-report.json",
+    "HBS.API/Db/Seeds/id-map.json.gz",
+    "HBS.API/Db/Seeds/SeedGenerator.cs",
+    "HBS.API/Db/Seeds/SeedData.cs",
+    "HBS.API/Db/Seeds/README.md",
+    "HBS.API/Db/Seeds/SeedValidator.cs",
+    "HBS.API/Db/Seeds/Staging/seed-data.json.gz",
+    "HBS.API/Db/Seeds/Sources/arabic-corrections.json",
+    "HBS.API/Tests/Seeds/Program.cs"
+  ],
+  "VerificationRuns": {
+    "Build": "dotnet build HBS.API/HBS.API.csproj --no-restore: 0 warnings, 0 errors",
+    "SeedTests": "96 checks passed, including worldwide strict loading and byte-identical offline regeneration",
+    "DatabaseOperations": "None"
+  }
+}

@@ -13,3 +13,6 @@ target/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+bin/
+obj/

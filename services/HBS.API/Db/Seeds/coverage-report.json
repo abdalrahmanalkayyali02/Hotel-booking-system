@@ -1,0 +1,15 @@
+{
+  "Complete": true,
+  "Counts": {
+    "Countries": 250,
+    "States": 5308,
+    "Cities": 152970,
+    "Roles": 5,
+    "Regions": 6,
+    "SubRegions": 22,
+    "RegionsTranslations": 12,
+    "SubRegionsTranslations": 44
+  },
+  "IssueCounts": {},
+  "Issues": []
+}

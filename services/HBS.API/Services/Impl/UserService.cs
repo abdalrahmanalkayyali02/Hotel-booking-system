@@ -34,7 +34,7 @@ public class UserService : IUserService
     public UserService(
         IUserRepository userRepository,
         IOtpRepository otpRepository,
-        ICountriesRepository countriesRepository, 
+        ICountriesRepository countriesRepository,
         ICitiesRepository citiesRepository,
         IValidator<RegisterStandardUsersDtos> validator,
         IValidator<UpdateUserRequest> updateValidator,
@@ -58,7 +58,7 @@ public class UserService : IUserService
     {
         var validationResult = _validator.Validate(request);
 
-        //Result pattern + fluentValidation when user data validation errors occur 
+        //Result pattern + fluentValidation when user data validation errors occur
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors
@@ -147,7 +147,7 @@ public class UserService : IUserService
             CityId = request.CityId
         };
 
-        //creating a new Otp 
+        //creating a new Otp
         var generatedAt = DateTime.UtcNow;
 
         Otp newOtp = new Otp
@@ -237,7 +237,7 @@ public class UserService : IUserService
 
         var validationResult = _updateValidator.Validate(request);
 
-        //Result pattern + fluentValidation when user data validation errors occur 
+        //Result pattern + fluentValidation when user data validation errors occur
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors
@@ -406,7 +406,7 @@ public class UserService : IUserService
                 )
             );
         }
-        
+
         var user = _userRepository.GetById(userId); //GetById returns null if the user does not exist or if the user isDeleted
 
         if (user is null)
@@ -429,7 +429,7 @@ public class UserService : IUserService
                 )
             );
         }
-        
+
         var countryName = _countriesRepository.GetName(country.Id, language.Id);
         if (countryName is null)
         {
@@ -439,7 +439,7 @@ public class UserService : IUserService
                 )
             );
         }
-        
+
         var city = _citiesRepository.GetById(user.CityId);
         if (city is null)
         {
@@ -450,7 +450,7 @@ public class UserService : IUserService
                 )
             );
         }
-        
+
         var cityName = _citiesRepository.GetName(city.Id, language.Id);
         if (cityName is null)
         {
@@ -460,7 +460,7 @@ public class UserService : IUserService
                 )
             );
         }
-        
+
         var role = _rolesRepository.GetById(user.RoleId);
         if (role is null)
         {
@@ -481,9 +481,9 @@ public class UserService : IUserService
                 )
             );
         }
-        
+
         var response = new ViewProfileResponse(
-            
+
             user.FirstName,
             user.LastName,
             user.Email,
@@ -495,7 +495,7 @@ public class UserService : IUserService
             countryName,
             cityName
             );
-        
+
         return Result<ViewProfileResponse>.Success(response);
     }
 } //end of class

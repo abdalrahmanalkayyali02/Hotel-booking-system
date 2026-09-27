@@ -30,6 +30,10 @@ public class AppDbContext : DbContext
     public DbSet<Cities> Cities { get; set; }
     public DbSet<CitiesTranslation> CitiesTranslations { get; set; }
     public DbSet<Languages> Languages { get; set; }
+    public DbSet<Hotels> Hotels { get; set; }
+    public DbSet<HotelsTranslation> HotelsTranslations { get; set; }
+    public DbSet<HotelRequests> HotelRequests { get; set; }
+    public DbSet<HotelImages> HotelImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

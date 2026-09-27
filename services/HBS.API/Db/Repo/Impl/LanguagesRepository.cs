@@ -52,4 +52,5 @@ public class LanguagesRepository : ILanguagesRepository
     {
         return _context.Languages.FirstOrDefault(language => language.Code == code);
     }
+
 }

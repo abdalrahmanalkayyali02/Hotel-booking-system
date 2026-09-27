@@ -10,4 +10,5 @@ public interface ILanguagesRepository
     void Update(Languages language);
     void Delete(Guid id);
     Languages? GetLanguageByCode(string code);
+
 }

@@ -1,6 +1,10 @@
+using HBS.API.Db.models;
+
 namespace HBS.API.Db.Repo.Interface;
 
-public class IHotelsTranslationRepository
+public interface IHotelsTranslationRepository
 {
-    
+  void Add(HotelsTranslation hotelTranslation);
+  HotelsTranslation? GetByHotelIdAndLanguage(Guid hotelId, Guid languageId);
+
 }

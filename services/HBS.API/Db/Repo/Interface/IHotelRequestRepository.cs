@@ -1,6 +1,8 @@
+using HBS.API.Db.models;
+
 namespace HBS.API.Db.Repo.Interface;
 
-public class IHotelRequestRepository
+public interface IHotelRequestRepository
 {
-    
+  void Add(HotelRequests hotelRequest);
 }

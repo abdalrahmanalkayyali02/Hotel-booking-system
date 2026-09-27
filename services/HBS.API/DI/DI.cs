@@ -13,8 +13,12 @@ using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using HBS.API.Db.Interceptors;
+using HBS.API.Db.UnitOfWork.Impl;
+using HBS.API.Db.UnitOfWork.Interface;
 using HBS.API.Dtos.Authentication.ChangePassword;
 using HBS.API.Dtos.Authentication.ForgotPassword;
+using HBS.API.Dtos.Hotels.CreateHotel;
+using HBS.API.Dtos.Hotels.UpdateHotel;
 using HBS.API.integrations.Interface;
 using HBS.API.integrations.Provider;
 
@@ -36,6 +40,10 @@ public static class Di
         services.AddScoped<ILanguagesRepository, LanguagesRepository>();
         services.AddScoped<ICountriesRepository, CountriesRepository>();
         services.AddScoped<ICitiesRepository, CitiesRepository>();
+        services.AddScoped<IHotelsRepository, HotelRepository>();
+        services.AddScoped<IHotelRequestRepository, HotelRequestRepository>();
+        services.AddScoped<IHotelsTranslationRepository, HotelsTranslationRepository>();
+        services.AddScoped<IHotelImagesRepository, HotelImagesRepository>();
 
         //Configurations
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
@@ -55,16 +63,22 @@ public static class Di
         services.AddScoped<IOtpService, OtpService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IHotelService, HotelService>();
 
         //validators
         services.AddScoped<IValidator<RegisterStandardUsersDtos>, UserValidator>();
         services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserValidator>();
         services.AddScoped<IValidator<ResetPasswordRequest>, ResetPasswordValidator>();
         services.AddScoped<IValidator<ChangePasswordRequest>, ChangePasswordValidator>();
+        services.AddScoped<IValidator<CreateHotelRequest>, CreateHotelValidator>();
+        services.AddScoped<IValidator<UpdateHotelRequest>, UpdateHotelValidator>();
 
         //Interceptors
         services.AddHttpContextAccessor();
         services.AddScoped<AuditSaveChangesInterceptor>();
+
+        //UnitOfWork
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         //Token Authentication
         var tokenSettings = configuration

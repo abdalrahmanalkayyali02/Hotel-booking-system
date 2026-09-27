@@ -1,8 +1,9 @@
 namespace HBS.API.Shared.enums;
 
-public enum HotelRequestStatus
+public enum HotelStatus
 {
     Pending,
     Approved,
-    Rejected
+    Rejected,
+    Deleted
 }

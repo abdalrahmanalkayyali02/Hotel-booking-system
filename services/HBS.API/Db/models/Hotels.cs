@@ -1,3 +1,4 @@
+using HBS.API.Shared.enums;
 using HBS.API.Shared.Models;
 
 namespace HBS.API.Db.models;
@@ -11,6 +12,9 @@ public class Hotels : BaseAuditLogModel
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
     public Guid ManagerId { get; set; }
+    public required HotelStatus Status { get; set; }
+
+
     public Users Manager { get; set; } = null!;
     public ICollection<HotelRequests>  HotelRequests { get; set; } = new List<HotelRequests>();
     public ICollection<HotelImages> HotelImages { get; set; } = new List<HotelImages>();
@@ -22,5 +26,5 @@ public class Hotels : BaseAuditLogModel
     public ICollection<Reviews> Reviews { get; set; } = new List<Reviews>();
     public ICollection<Favorites> Favorites { get; set; } = new List<Favorites>();
     public ICollection<HotelsTranslation> Translations { get; set; } = new List<HotelsTranslation>();
-    
+
 }

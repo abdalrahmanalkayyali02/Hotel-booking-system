@@ -35,4 +35,16 @@ public class HotelImagesRepository : IHotelImagesRepository
   {
     _context.HotelImages.Remove(image);
   }
+
+  public HotelImages? GetPrimaryImageByHotelId(Guid hotelId)
+  {
+    return _context.HotelImages
+      .FirstOrDefault(image => image.HotelId == hotelId &&
+                               image.IsPrimary == true);
+  }
+
+  public void Update(HotelImages image)
+  {
+    _context.HotelImages.Update(image);
+  }
 }

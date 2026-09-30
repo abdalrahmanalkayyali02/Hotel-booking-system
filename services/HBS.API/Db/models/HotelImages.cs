@@ -7,6 +7,7 @@ public class HotelImages : BaseAuditLogModel
     public Guid HotelId { get; set; }
     public required string ImageUrl { get; set; }
     public bool IsPrimary { get; set; }
+    public required string PublicId { get; set; }
 
     public Hotels Hotel { get; set; } = null!;
 }

@@ -21,6 +21,7 @@ using HBS.API.Dtos.Hotels.CreateHotel;
 using HBS.API.Dtos.Hotels.UpdateHotel;
 using HBS.API.integrations.Interface;
 using HBS.API.integrations.Provider;
+using CloudinaryDotNet;
 
 namespace HBS.API.DI;
 
@@ -48,6 +49,26 @@ public static class Di
         //Configurations
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.Configure<TokenSettings>(configuration.GetSection("TokenSettings"));
+        services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+
+        var cloudinarySettings = configuration
+                                   .GetSection("CloudinarySettings")
+                                   .Get<CloudinarySettings>()
+                                 ?? throw new InvalidOperationException(
+                                   "Cloudinary settings configuration is missing"
+                                 );
+
+        var cloudinaryAccount = new Account(
+          cloudinarySettings.CloudName,
+          cloudinarySettings.ApiKey,
+          cloudinarySettings.ApiSecret
+        );
+
+        var cloudinary = new Cloudinary(cloudinaryAccount);
+
+        cloudinary.Api.Secure = true;
+
+        services.AddSingleton(cloudinary);
 
         //Redis
         var redisConnectionString = configuration.GetConnectionString("Redis")
@@ -64,6 +85,7 @@ public static class Di
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IHotelService, HotelService>();
+        services.AddScoped<IImageService, ImageService>();
 
         //validators
         services.AddScoped<IValidator<RegisterStandardUsersDtos>, UserValidator>();

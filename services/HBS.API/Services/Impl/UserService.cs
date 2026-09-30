@@ -14,6 +14,8 @@ using HBS.API.Dtos.Users.GetAll;
 using HBS.API.Dtos.Users.ViewProfile;
 using HBS.API.integrations.Interface;
 using System.Globalization;
+using HBS.API.Dtos.Hotels.CreateHotel;
+using HBS.API.Dtos.Users.RegisterHotelAdmin;
 
 namespace HBS.API.Services.Impl;
 
@@ -25,11 +27,13 @@ public class UserService : IUserService
     private readonly ICitiesRepository _citiesRepository;
     private readonly IValidator<RegisterStandardUsersDtos> _validator;
     private readonly Guid _customerRole = Guid.Parse("01a08b0c-50a4-755f-92a8-3d649593ae7f");
+    private readonly Guid _hotelAdminRole = Guid.Parse("01a08b0c-50a4-7634-87ba-4dfff8aa5334");
     private readonly ILanguagesRepository _languagesRepository;
     //private readonly Guid _languageId = Guid.Parse("01a08b0c-4db4-77f1-8af6-0d16a7f67ff3");
     private readonly IValidator<UpdateUserRequest> _updateValidator;
     private readonly IEmailService _emailService;
     private readonly IRolesRepository _rolesRepository;
+    private readonly IHotelService _hotelService;
 
     public UserService(
         IUserRepository userRepository,
@@ -40,7 +44,8 @@ public class UserService : IUserService
         IValidator<UpdateUserRequest> updateValidator,
         IEmailService emailService,
         IRolesRepository rolesRepository,
-        ILanguagesRepository languageRepository
+        ILanguagesRepository languageRepository,
+        IHotelService hotelService
         )
     {
         _userRepository = userRepository;
@@ -52,6 +57,7 @@ public class UserService : IUserService
         _emailService = emailService;
         _rolesRepository = rolesRepository;
         _languagesRepository = languageRepository;
+        _hotelService = hotelService;
     }
 
     public async Task<Result<RegisterStandardUsersResponse>> RegisterUsers(RegisterStandardUsersDtos request)
@@ -497,5 +503,158 @@ public class UserService : IUserService
             );
 
         return Result<ViewProfileResponse>.Success(response);
+    }
+
+    public async Task<Result<RegisterHotelAdminResponse>> RegisterHotelAdmin(RegisterHotelAdminRequest request)
+    {
+      var validationResult = _validator.Validate(request.User);
+
+      //Result pattern + fluentValidation when user data validation errors occur
+      if (!validationResult.IsValid)
+      {
+        var errors = validationResult.Errors
+          .GroupBy(error => error.PropertyName)
+          .ToDictionary(
+            group => group.Key,
+            group => (object)group
+              .Select(error => error.ErrorMessage)
+              .ToArray()
+          );
+        return Result<RegisterHotelAdminResponse>.Failure(Error.Validation("User.Validation",
+          "One or more validation errors occurred", errors));
+      }
+
+      //check that the country exists
+        var countryExist = this._countriesRepository.GetById(request.User.CountryId);
+        if (countryExist is null)
+        {
+            return Result<RegisterHotelAdminResponse>.Failure(
+                Error.NotFound(
+                    "Country.NotFound",
+                    "The selected country was not found"
+                )
+            );
+        }
+
+        //check that the city exists
+        var cityExist = this._citiesRepository.GetById(request.User.CityId);
+        if (cityExist is null)
+        {
+            return Result<RegisterHotelAdminResponse>.Failure(
+                Error.NotFound(
+                    "City.NotFound",
+                    "The selected city was not found"
+                )
+            );
+        }
+
+        //check for duplicate emails
+        var normalizedEmail = request.User.Email.ToUpperInvariant();
+        var existingEmail = this._userRepository.GetByEmail(normalizedEmail);
+        if (existingEmail is not null)
+        {
+            return Result<RegisterHotelAdminResponse>.Failure(
+                Error.Conflict("User.EmailAlreadyExists",
+                  "A User with this email already exists")
+                );
+        }
+
+        //check for duplicate phone numbers
+        var existingPhoneNumber = this._userRepository.GetByPhoneNumber(request.User.PhoneNumberCountryCode,
+          request.User.PhoneNumberValue);
+        if (existingPhoneNumber is not null)
+        {
+            return Result<RegisterHotelAdminResponse>.Failure(
+                Error.Conflict("User.PhoneNumberAlreadyExists", "A User with this Phone Number already exists"));
+        }
+
+        //check that the city is in the country using the countryId foreign key field in cities
+        if (cityExist.CountryId != countryExist.Id)
+        {
+            return Result<RegisterHotelAdminResponse>.Failure(Error.Conflict("City.CountryMismatch",
+                "The selected city does not belong to the selected country"));
+        }
+        //generating the otp then hashing it
+        var otpCode = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+
+        var otpBytes = Encoding.UTF8.GetBytes(otpCode);
+        var hashedOtpBytes = MD5.HashData(otpBytes);
+        var hashedOtp = Convert.ToHexString(hashedOtpBytes);
+
+
+        Users newUser = new Users
+        {
+          Id = Guid.CreateVersion7(),
+          FirstName = request.User.FirstName,
+          LastName = request.User.LastName,
+          Email = normalizedEmail,
+          BirthDate = request.User.BirthDate,
+          IsEmailConfirmed = false,
+          PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.User.Password),
+          PhoneNumberCountryCode = request.User.PhoneNumberCountryCode,
+          PhoneNumber = request.User.PhoneNumberValue,
+          PhoneNumberConfirmed = false,
+          RoleId = _hotelAdminRole,
+          Status = UserStatus.Pending,
+          VerifiedAt = null,
+          CountryId = request.User.CountryId,
+          CityId = request.User.CityId
+        };
+
+        //creating a new Otp
+        var generatedAt = DateTime.UtcNow;
+
+        Otp newOtp = new Otp
+        {
+          Id = Guid.CreateVersion7(),
+          HashedOtp = hashedOtp,
+          Type = OtpType.Registration,
+          Target = OtpTarget.Email,
+          UserId = newUser.Id,
+          GeneratedAt = generatedAt,
+          ExpiresAt = generatedAt.AddMinutes(5),
+          IsUsed = false,
+          NumberOfAttempts = 0
+        };
+
+        _userRepository.Add(newUser);
+        _otpRepository.Add(newOtp);
+
+        var roleCode = "HOTEL_ADMIN";
+
+        var hotelCreateResponse = await _hotelService.CreateHotelAsync(request.Hotel, newUser.Id, roleCode);
+
+        if (!hotelCreateResponse.IsSuccess)
+        {
+          return Result<RegisterHotelAdminResponse>.Failure(
+            hotelCreateResponse.Error.First()
+          );
+        }
+
+        //sending the plain Otp
+        await _emailService.SendOtpEmailAsync(
+          newUser.Email,
+          otpCode
+        );
+
+        var response = new RegisterHotelAdminResponse(
+          newUser.Id,
+          newUser.FirstName,
+          newUser.LastName,
+          newUser.Email,
+          newUser.PhoneNumberCountryCode,
+          newUser.PhoneNumber,
+          newUser.BirthDate,
+          newUser.PhoneNumberConfirmed,
+          newUser.IsEmailConfirmed,
+          newUser.RoleId,
+          newUser.Status,
+          newUser.CountryId,
+          newUser.CityId,
+          hotelCreateResponse.Value.HotelId,
+          hotelCreateResponse.Value.Status
+          );
+
+          return Result<RegisterHotelAdminResponse>.Success(response);
     }
 } //end of class

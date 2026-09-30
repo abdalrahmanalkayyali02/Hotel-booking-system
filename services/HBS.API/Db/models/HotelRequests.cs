@@ -7,7 +7,7 @@ public class HotelRequests : BaseAuditLogModel
 {
     public Guid UserId { get; set; }
     public Guid HotelId { get; set; }
-    public HotelRequestStatus Status { get; set; }
+    public HotelStatus Status { get; set; }
     public string? RejectionReason { get; set; }
     public DateTime? ReviewedAt { get; set; }
     public Guid? ReviewedBy { get; set; }

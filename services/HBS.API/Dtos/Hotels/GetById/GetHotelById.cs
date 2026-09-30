@@ -8,8 +8,8 @@ public record GetHotelByIdResponse(
   string Country,
   string City,
   float StarRating,
-  string PhoneNumberCountryCode,
-  string PhoneNumber,
+  string? PhoneNumberCountryCode,
+  string? PhoneNumber,
   string? Email,
   Guid ManagerId
   );

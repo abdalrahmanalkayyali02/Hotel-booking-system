@@ -11,4 +11,8 @@ public interface IHotelImagesRepository
     List<HotelImages> GetByHotelId(Guid hotelId);
 
     void Delete(HotelImages image);
+
+    HotelImages? GetPrimaryImageByHotelId(Guid hotelId);
+
+    void Update(HotelImages image);
 }

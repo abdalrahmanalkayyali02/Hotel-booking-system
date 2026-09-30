@@ -10,4 +10,7 @@
     <Compile Include="../../Db/models/*.cs" Link="Models/%(Filename)%(Extension)" />
     <Compile Include="../../Shared/enums/*.cs" Link="Enums/%(Filename)%(Extension)" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.29.3" />
+  </ItemGroup>
 </Project>

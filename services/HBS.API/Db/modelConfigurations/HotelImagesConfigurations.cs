@@ -13,15 +13,18 @@ public class HotelImagesConfigurations : IEntityTypeConfiguration<HotelImages>
 
         builder.Property(hotelImage => hotelImage.HotelId)
             .IsRequired();
-        
+
         builder.Property(hotelImage=>hotelImage.ImageUrl)
             .IsRequired()
             .HasMaxLength(500);
-        
+
         builder.Property(hotelImage=>hotelImage.IsPrimary)
             .IsRequired()
             .HasDefaultValue(false);
-        
+
+        builder.Property(hotelImage => hotelImage.PublicId)
+          .IsRequired();
+
         builder.HasOne(hotelImage=>hotelImage.Hotel)
             .WithMany(hotel=>hotel.HotelImages)
             .HasForeignKey(hotelImage=>hotelImage.HotelId)
